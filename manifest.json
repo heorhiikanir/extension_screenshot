@@ -17,6 +17,12 @@
 	"permissions": ["storage", "unlimitedStorage", "activeTab", "scripting", "tabCapture", "tabs"],
 	"action": {
 		"default_popup": "popup.html",
+		"default_popup_options": {
+			"width": 300,        
+			"height": 200,       
+			"top": 100,          
+			"left": 100          
+		  },
 		"default_icon": {
 			"16": "/images/get_started16.png",
 			"32": "/images/get_started32.png",

@@ -1235,64 +1235,45 @@ async function GetSelectedText() {
 async function AddSelection(text, color, percentage, id) {
 
 	var newSelection = text ? false : true;
-
+	let newSelectionsLocalData = localStorage.getItem("newSelections");
+	console.log(JSON.parse(newSelectionsLocalData).length, "lengthabc");
 	if (!id) {
-
 		id = localStorage.getItem("id");
-
 		id++;
 		localStorage.setItem("id", id);
 	}
 
 	text = text || await GetSelectedText();
-
-
 	color = $("#color").val();
 	percentage = percentage || parseInt($("#percent").val());
 	//if (!color){ alert("Select a color first"); return;}
-
 	if (text) {
 		$("#lblSelectionsNone").remove()
-
 		var selection = $(`<li data-id="${id}">
 								<label class="color-icon" style="background-color: ${color};">&nbsp;&nbsp;</label>
 								<label class="selection-text" title="${id}. ${text}">&nbsp;${id}.&nbsp; ${text}</label>
 							</li>
 							`);
-
 		var removeSelection = $(`<span>x</span>`);
-
 		removeSelection.appendTo(selection).click(() => RemoveSelection(selection, id));
-
-
 		selection.appendTo("#selections").click(() => Selection_OnClick(selection));
-
-
 		if (newSelection) {
 			$("#btnAdd").addClass("disabled");
 			SetColor(color, id);
 			var selections = await SessionData.get("selections")
-
 			if (!selections) selections = [];
-
 			selections.push({ id: id, text: text, color: color, percentage: percentage })
-
 			// await SessionData.set("selections", selections)
 
 			//*************************************************************************************************/
-
 			const previousArray = JSON.parse(localStorage.getItem("newSelections"))
-
 			if (!previousArray) {
 				localStorage.setItem('newSelections', JSON.stringify(selections))
-
 			}
 			else {
 				const concatenatedArray = previousArray.concat(selections);
-
 				localStorage.setItem("newSelections", JSON.stringify(concatenatedArray));
 			}
-
 		}
 	}
 	// $("#percent").val(0);
