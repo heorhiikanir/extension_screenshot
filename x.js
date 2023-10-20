@@ -448,7 +448,6 @@ function Upload() {
 			xhr.open("POST", `${API_URL}/ext/upload`);
 			xhr.setRequestHeader("Authorization", "bearer " + res.token);
 			xhr.send(formData)
-
 		}
 	})
 }

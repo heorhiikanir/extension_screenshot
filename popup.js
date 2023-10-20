@@ -1136,7 +1136,6 @@ async function Capture() {
 
 		console.log('"""""""""""""""""CaptureAPI""""""""""""""""""""""""""""""""""""""""');
 
-
 		Capture.captureToFiles(tab, filename, displayCaptures, errorHandler, progress, splitnotifier);
 
 		$("#capturing").show();
@@ -1231,12 +1230,11 @@ async function GetSelectedText() {
 	var text = await p;
 	return text;
 }
+let cnt = 0;
 
 async function AddSelection(text, color, percentage, id) {
 
 	var newSelection = text ? false : true;
-	let newSelectionsLocalData = localStorage.getItem("newSelections");
-	console.log(JSON.parse(newSelectionsLocalData).length, "lengthabc");
 	if (!id) {
 		id = localStorage.getItem("id");
 		id++;
@@ -1246,12 +1244,12 @@ async function AddSelection(text, color, percentage, id) {
 	text = text || await GetSelectedText();
 	color = $("#color").val();
 	percentage = percentage || parseInt($("#percent").val());
-	//if (!color){ alert("Select a color first"); return;}
 	if (text) {
 		$("#lblSelectionsNone").remove()
+		cnt = cnt + 1;
 		var selection = $(`<li data-id="${id}">
 								<label class="color-icon" style="background-color: ${color};">&nbsp;&nbsp;</label>
-								<label class="selection-text" title="${id}. ${text}">&nbsp;${id}.&nbsp; ${text}</label>
+								<label class="selection-text" title="${id}. ${text}">&nbsp;${cnt}.&nbsp; ${text}</label>
 							</li>
 							`);
 		var removeSelection = $(`<span>x</span>`);
@@ -1264,8 +1262,6 @@ async function AddSelection(text, color, percentage, id) {
 			if (!selections) selections = [];
 			selections.push({ id: id, text: text, color: color, percentage: percentage })
 			// await SessionData.set("selections", selections)
-
-			//*************************************************************************************************/
 			const previousArray = JSON.parse(localStorage.getItem("newSelections"))
 			if (!previousArray) {
 				localStorage.setItem('newSelections', JSON.stringify(selections))
@@ -1302,9 +1298,7 @@ async function RemoveSelection(selection, id) {
 	if (index !== -1) {
 		storedArray.splice(index, 1);
 	}
-
 	localStorage.setItem("newSelections", JSON.stringify(storedArray));
-
 
 	$(selection).remove();
 
@@ -1313,15 +1307,12 @@ async function RemoveSelection(selection, id) {
 		$("#btnConnect").addClass("disabled")
 	}
 	var selections = await SessionData.get("selections");
-
-
 	if (!selections) selections = [];
 	selections = selections.filter(function (selection) {
 		return selection.id !== id;
 	});
 
 	await SessionData.set("selections", selections);
-
 
 	var connections = await SessionData.get("connections");
 	if (connections) {
@@ -1343,6 +1334,26 @@ async function RemoveSelection(selection, id) {
 	});
 
 	await p;
+	refreshComments();
+}
+
+function refreshComments(){
+	$("#selections").empty();
+	const refreshedData = JSON.parse(localStorage.getItem("newSelections"));
+	color = $("#color").val();
+	let cnt = 0;
+	while(cnt < refreshedData.length){
+		cnt ++;
+		var selection = $(`<li data-id="${refreshedData[cnt-1].id}">
+								<label class="color-icon" style="background-color: ${color};">&nbsp;&nbsp;</label>
+								<label class="selection-text" title="${refreshedData[cnt-1].id}. ${refreshedData[cnt-1].text}">&nbsp;${cnt}.&nbsp; ${refreshedData[cnt-1].text}</label>
+							</li>
+								`);
+		var removeSelection = $(`<span>x</span>`);
+		removeSelection.appendTo(selection).click(() => RemoveSelection(selection, refreshedData[cnt-1].id));
+		selection.appendTo("#selections").click(() => Selection_OnClick(selection));
+		$('#selections').append(selection);
+	};
 }
 
 async function HasActiveSelection() {
