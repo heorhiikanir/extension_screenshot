@@ -1233,6 +1233,10 @@ async function GetSelectedText() {
 let cnt = 0;
 
 async function AddSelection(text, color, percentage, id) {
+	console.log($("#selections").height(), "heightaaa");
+	const commentList = $("#selections");
+	commentList.scrollTop(commentList[0].scrollHeight);
+	console.log(commentList[0].scrollHeight, "scrollHeight");
 
 	var newSelection = text ? false : true;
 	if (!id) {
@@ -1247,12 +1251,15 @@ async function AddSelection(text, color, percentage, id) {
 	if (text) {
 		$("#lblSelectionsNone").remove()
 		cnt = cnt + 1;
-		var selection = $(`<li data-id="${id}">
-								<label class="color-icon" style="background-color: ${color};">&nbsp;&nbsp;</label>
-								<label class="selection-text" title="${id}. ${text}">&nbsp;${cnt}.&nbsp; ${text}</label>
+		var selection = $(`<li data-id="${id}" style = "height: fit-content; display: flex; justify-content: space-between;">
+								<div style="display: inline-flex; height: fit-content;">
+									<label class="color-icon" style="background-color: ${color};">&nbsp;&nbsp;</label>
+									<span style="line-height: 1rem;">&nbsp;${cnt}.&nbsp; </span>
+									<label class="selection-text" title="${id}. ${text}">${text}</label>
+								</div>
 							</li>
 							`);
-		var removeSelection = $(`<span>x</span>`);
+		var removeSelection = $(`<span style="line-height: 1rem;">❌</span>`);
 		removeSelection.appendTo(selection).click(() => RemoveSelection(selection, id));
 		selection.appendTo("#selections").click(() => Selection_OnClick(selection));
 		if (newSelection) {
@@ -1344,12 +1351,15 @@ function refreshComments(){
 	let cnt = 0;
 	while(cnt < refreshedData.length){
 		cnt ++;
-		var selection = $(`<li data-id="${refreshedData[cnt-1].id}">
-								<label class="color-icon" style="background-color: ${color};">&nbsp;&nbsp;</label>
-								<label class="selection-text" title="${refreshedData[cnt-1].id}. ${refreshedData[cnt-1].text}">&nbsp;${cnt}.&nbsp; ${refreshedData[cnt-1].text}</label>
+		var selection = $(`<li data-id="${refreshedData[cnt-1].id}" style = "height: fit-content; display: flex; justify-content: space-between;">
+								<div style="display: inline-flex; height: fit-content;">
+									<label class="color-icon" style="background-color: ${color};">&nbsp;&nbsp;</label>
+									<span style="line-height: 1rem;">&nbsp;${cnt}.&nbsp; </span>
+									<label class="selection-text" title="${refreshedData[cnt-1].id}. ${refreshedData[cnt-1].text}">${refreshedData[cnt-1].text}</label>
+								</div>
 							</li>
 								`);
-		var removeSelection = $(`<span>x</span>`);
+		var removeSelection = $(`<span style="line-height: 1rem;">❌</span>`);
 		removeSelection.appendTo(selection).click(() => RemoveSelection(selection, refreshedData[cnt-1].id));
 		selection.appendTo("#selections").click(() => Selection_OnClick(selection));
 		$('#selections').append(selection);

@@ -319,14 +319,16 @@ ul li {
   overflow: hidden;
   cursor: pointer;
   padding-left: 20px;
-}
+
+  }
 
 ul li label {
   display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
+  /* overflow: hidden; */
+  /* white-space: nowrap; */
   text-overflow: ellipsis;
   max-width: 54ch;
+  line-height: 1rem;
 }
 
 ul li.selected {
@@ -335,7 +337,6 @@ ul li.selected {
 
 ul li span {
   float: right;
-  margin-right: 15px;
 }
 
 #btnConnect {
@@ -644,9 +645,6 @@ ul li span {
   left: 49px;
   right: 0;
   bottom: 0;
-}
-
-#scroll {
 }
 
 audio {
