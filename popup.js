@@ -227,7 +227,7 @@ async function OnLoad() {
 		$("#static-capture").prop('checked', true);
 	}
 }
-
+let email = "";
 async function Login() {
 	if (!username || !password) {
 		email = $("#txtUser").val();
@@ -240,9 +240,10 @@ async function Login() {
 		data: { email, password },
 		success: async function (data) {
 			console.log('datadatadatadata>>>>>>', data);
+			localStorage.setItem('loggedUsername', email);
 			if (!data.error) {
 				await SetStorage("token", data.token);
-				$("#lbl-username").text(`👤 ${data.user_name}`);
+				$("#lbl-username").text(`👤 ${localStorage.getItem('loggedUsername')}`);
 				localStorage.setItem('lbl-username', data.user_name)
 				$("#login").hide();
 				$("#popupShadow").hide();
@@ -339,7 +340,7 @@ async function SelectTab(tab) {
 	$('ul#tabsPanel .tabText').removeClass('activetab');
 
 
-	$("#lbl-username").text(`👤 ${localStorage.getItem('lbl-username')}`)
+	$("#lbl-username").text(`👤 ${localStorage.getItem('loggedUsername')}`)
 	if (tab === "audio") {
 		$("#tabAudio").addClass("active")
 		$("#tabText").removeClass("active")
@@ -1231,12 +1232,13 @@ async function GetSelectedText() {
 	return text;
 }
 let cnt = 0;
+const messageList = $('#selections');
+
+function scrollToBottom() {
+	messageList.scrollTop(messageList.prop('scrollHeight'));
+  }
 
 async function AddSelection(text, color, percentage, id) {
-	console.log($("#selections").height(), "heightaaa");
-	const commentList = $("#selections");
-	commentList.scrollTop(commentList[0].scrollHeight);
-	console.log(commentList[0].scrollHeight, "scrollHeight");
 
 	var newSelection = text ? false : true;
 	if (!id) {
@@ -1249,7 +1251,9 @@ async function AddSelection(text, color, percentage, id) {
 	color = $("#color").val();
 	percentage = percentage || parseInt($("#percent").val());
 	if (text) {
-		$("#lblSelectionsNone").remove()
+		$("#lblSelections").remove();
+		$("#lblSelectionsNone").remove();
+		$("#selections").css("height", "225px");
 		cnt = cnt + 1;
 		var selection = $(`<li data-id="${id}" style = "height: fit-content; display: flex; justify-content: space-between;">
 								<div style="display: inline-flex; height: fit-content;">
@@ -1279,7 +1283,7 @@ async function AddSelection(text, color, percentage, id) {
 			}
 		}
 	}
-	// $("#percent").val(0);
+	scrollToBottom();
 }
 
 function Selection_OnClick(selection) {
